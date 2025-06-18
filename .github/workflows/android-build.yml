@@ -22,16 +22,15 @@ jobs:
           distribution: temurin
           java-version: 11
 
-      - name: Download and extract Android Command Line Tools
+      - name: Install Android SDK Command Line Tools (proper layout)
         run: |
           mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
           cd $ANDROID_SDK_ROOT/cmdline-tools
-          curl -o sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
-          unzip sdk.zip -d tmp
-          mv tmp/cmdline-tools latest
-          rm -rf tmp sdk.zip
+          curl -O https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
+          unzip commandlinetools-linux-10406996_latest.zip -d latest
+          rm commandlinetools-linux-10406996_latest.zip
 
-      - name: Accept licenses and install SDK components
+      - name: Accept SDK Licenses & Install Dependencies
         run: |
           yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses
           $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT \
