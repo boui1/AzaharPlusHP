@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
       ANDROID_SDK_ROOT: $HOME/android-sdk
 
     steps:
@@ -24,19 +23,18 @@ jobs:
           distribution: 'temurin'
           java-version: 11
 
-      - name: Download and set up Android SDK Command Line Tools
+      - name: Download and extract Android Command Line Tools
         run: |
           mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
           cd $ANDROID_SDK_ROOT/cmdline-tools
           curl -o sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
-          unzip sdk.zip
-          mv cmdline-tools latest
+          unzip sdk.zip -d cmdline-tools
           rm sdk.zip
 
-      - name: Install SDK components
+      - name: Accept licenses and install SDK components
         run: |
-          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT \
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses
+          $ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT \
             "platform-tools" \
             "platforms;android-30" \
             "build-tools;30.0.3" \
@@ -44,9 +42,7 @@ jobs:
             "cmake;3.22.1"
 
       - name: Build APK
-        run: |
-          export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
-          ./gradlew assembleDebug
+        run: ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
