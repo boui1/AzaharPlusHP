@@ -24,14 +24,14 @@ jobs:
           distribution: 'temurin'
           java-version: 11
 
-      - name: Download and extract Android SDK Command Line Tools
+      - name: Download and set up Android SDK Command Line Tools
         run: |
           mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
           cd $ANDROID_SDK_ROOT/cmdline-tools
           curl -o sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
-          unzip sdk.zip -d temp
-          mv temp/cmdline-tools latest
-          rm -rf sdk.zip temp
+          unzip sdk.zip
+          mv cmdline-tools latest
+          rm sdk.zip
 
       - name: Install SDK components
         run: |
